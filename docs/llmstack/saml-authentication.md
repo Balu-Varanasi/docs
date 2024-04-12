@@ -83,7 +83,28 @@ Ensure that your proxy server (e.g., Nginx) is configured to pass the correct he
 
 
 ## Step 2: Register Your Application with Microsoft Entra
+Follow the steps defined in the official [Quickstart](https://learn.microsoft.com/en-us/entra/identity/enterprise-apps/add-application-portal) guide to configure a Microsoft Entra ID application.
+
+To configure SSO endpoints, refer the below image.
 ![SSO - SAML - Microsoft Entra ID Configuration](/img/microsoft-entra-id-saml-sso.png)
+
+When configuring the SAML signing certificate in Microsoft Entra ID, you'll encounter options to specify how the SAML tokens should be signed and what algorithm should be used for the signing. Here's what we need to know about each option:
+
+1. **Signing Option**: This setting determines which parts of the SAML tokens provided by Microsoft Entra ID during the authentication process will be digitally signed. The options are:
+   - **Sign SAML response**: This option signs the entire SAML response that includes the assertion. It ensures the integrity of the response from Microsoft Entra ID but not the assertion itself.
+   - **Sign SAML assertion**: This option signs just the assertion within the SAML response. The assertion contains the authentication and authorization data, and signing it ensures its integrity.
+   - **Sign SAML response and assertion**: This option provides the highest level of security by signing both the entire response and the assertion within it. It is generally the recommended setting as it ensures the integrity of both the response and the contained assertion.
+
+2. **Signing Algorithm**: This setting specifies the cryptographic hashing algorithm used to sign the SAML tokens. The options are:
+   - **SHA-1**: An older hashing algorithm that is faster but considered less secure due to vulnerabilities that have been discovered over time.
+   - **SHA-256**: A more secure hashing algorithm that is part of the SHA-2 family. It provides a longer hash value and is designed to counteract the vulnerabilities found in SHA-1. It is recommended to use SHA-256 for better security.
+
+### Recommendations:
+
+- **Signing Option**: Choose to "Sign SAML response and assertion" for the highest security level, ensuring that both the response and the assertion are verified as coming from a trusted source without tampering.
+
+- **Signing Algorithm**: Opt for SHA-256, given its enhanced security properties over SHA-1. This is especially important for applications that handle sensitive information or operate in environments where security is a primary concern.
+
 
 #### References:
 1. [SAML authentication with Microsoft Entra ID](https://learn.microsoft.com/en-us/entra/architecture/auth-saml)
@@ -146,7 +167,7 @@ Then, add the following configuration in your `settings.py`:
             #     "want_assertion_encrypted": False,
             #     "want_assertion_signed": True,
             #     "want_messages_signed": False,
-            # },           
+            # },
        },
    }
 
@@ -157,3 +178,28 @@ Then, add the following configuration in your `settings.py`:
    }
    ```
    This configuration specifies your application's name, client ID, tenant ID, and certificate directly from environment variables, providing a secure and flexible way to manage your SAML integration. The `attribute_mapping` and `idp` configurations define how user attributes are mapped from SAML assertions and detail the identity provider (IdP) settings necessary for SAML assertions.
+
+   #### Handling `metadata_url` and `x509cert` in django-allauth SAML Configuration
+   Avoid specifying `metadata_url` and `x509cert` together in django-allauth's SAML `idp` settings. If both are provided, allauth prioritizes the `idp` settings fetched from `metadata_url`, ignoring the manually set `x509cert`. Despite examples in the official documentation, using both can lead to confusion.   
+
+   #### Configuring `advanced` SAML app settings
+
+   While Setting up Single Sign-On with SAML in step 2, if you choose to sign the SAML assertion or both the SAML response and assertion in Microsoft Entra ID, then configuring the `advanced` settings in your Django application's SAML configuration (as part of django-allauth) to require signed assertions is necessary. This ensures that your Django application validates the integrity of the received SAML assertions according to the signing preferences set in Microsoft Entra ID.
+
+   By setting `"want_assertion_signed": True`, you are instructing your Django application to expect and validate the signature of the SAML assertion. This is an important security measure, as it ensures that the assertions your application processes are indeed sent by Microsoft Entra ID and have not been tampered with during transmission.
+
+   Here's how the updated configuration would look, including the `advanced` settings to enforce assertion signing:
+
+   ```python
+   SAML_APP = {
+      ...
+      "settings": {
+         ...
+         "advanced": {
+            "want_assertion_signed": True,
+         },
+      },
+   }
+   ```
+
+   This approach ensures that your application aligns with the security configurations set on the identity provider side (Microsoft Entra ID), maintaining the integrity and trustworthiness of the authentication process.
