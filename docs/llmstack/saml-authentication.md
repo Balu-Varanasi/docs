@@ -82,13 +82,16 @@ Ensure that your proxy server (e.g., Nginx) is configured to pass the correct he
    This configuration ensures Django can accurately determine the request scheme (HTTP or HTTPS), which is essential for secure operation and proper URL construction.
 
 
-## Step 2: Register Your Application with Microsoft Entra
-Follow the steps defined in the official [Quickstart](https://learn.microsoft.com/en-us/entra/identity/enterprise-apps/add-application-portal) guide to configure a Microsoft Entra ID application.
+## Step 2: Register Your Application with Microsoft Entra ID
+Follow the instructions in the official [Quickstart](https://learn.microsoft.com/en-us/entra/identity/enterprise-apps/add-application-portal) guide to configure an `Enterprise Application` and register it in the `App registrations` section.
 
-To configure SSO endpoints, refer the below image.
+After configuring an `Enterprise application` and registering it under `App registrations`, obtain the `Display name` and `Directory (tenant) ID` from the `App registration` dashboard. These details will later serve as the `SAML_APP_NAME` and `SAML_APP_TENANT_ID` environment variables.
+
+To set up `Single Sign-On` values, go to `Home > Default Directory > Manage > Enterprise applications > SAML_APP_NAME > Manage > Single sign-on`. Follow the instructions in the image below to configure endpoints. Remember to replace `test-org-inc` in the URLs with the slug you plan to use; this slug will be referenced as the `SAML_APP_CLIENT_ID` environment variable later.
+
 ![SSO - SAML - Microsoft Entra ID Configuration](/img/microsoft-entra-id-saml-sso.png)
 
-When configuring the SAML signing certificate in Microsoft Entra ID, you'll encounter options to specify how the SAML tokens should be signed and what algorithm should be used for the signing. Here's what we need to know about each option:
+When configuring the SAML signing certificate (as seen in the third section of the image above), you'll come across options to determine how SAML tokens should be signed and which algorithm should be used. Here are the key details for each option:
 
 1. **Signing Option**: This setting determines which parts of the SAML tokens provided by Microsoft Entra ID during the authentication process will be digitally signed. The options are:
    - **Sign SAML response**: This option signs the entire SAML response that includes the assertion. It ensures the integrity of the response from Microsoft Entra ID but not the assertion itself.
@@ -105,6 +108,7 @@ When configuring the SAML signing certificate in Microsoft Entra ID, you'll enco
 
 - **Signing Algorithm**: Opt for SHA-256, given its enhanced security properties over SHA-1. This is especially important for applications that handle sensitive information or operate in environments where security is a primary concern.
 
+After configuring the certificate, download the `Certificate (Base64)` and save it. This will be used as the `SAML_APP_CERTIFICATE` environment variable later.
 
 #### References:
 1. [SAML authentication with Microsoft Entra ID](https://learn.microsoft.com/en-us/entra/architecture/auth-saml)
