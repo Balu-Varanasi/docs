@@ -80,7 +80,13 @@ Ensure that your proxy server (e.g., Nginx) is configured to pass the correct he
 
 
 ## Step 2: Register Your Application with Microsoft Entra
-... 
+
+#### References:
+1. [SAML authentication with Microsoft Entra ID](https://learn.microsoft.com/en-us/entra/architecture/auth-saml)
+2. [Quickstart: Add an enterprise application](https://learn.microsoft.com/en-us/entra/identity/enterprise-apps/add-application-portal)
+3. [Quickstart: Create and assign a user account](https://learn.microsoft.com/en-us/entra/identity/enterprise-apps/add-application-portal-assign-users)
+4. [What is single sign-on in Microsoft Entra ID?](https://learn.microsoft.com/en-us/entra/identity/enterprise-apps/what-is-single-sign-on)
+5. [Plan a single sign-on deployment](https://learn.microsoft.com/en-us/entra/identity/enterprise-apps/plan-sso-deployment)
 
 ## Step 3: Configure Your Django Application
 To configure your Django project for SAML authentication with Microsoft Entra ID, you will need to update your `settings.py` file with specific settings that define how your application interacts with Microsoft's identity services. 
