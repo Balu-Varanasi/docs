@@ -42,6 +42,9 @@ The initial setup on an Ubuntu server involves installing necessary libraries an
    ```
    This command ensures that `django-allauth` and its dependencies are installed and managed by Poetry, simplifying dependency management and project setup.
 
+##### References:
+- https://xmlsec.readthedocs.io/en/stable/install.html
+
 #### b) Django-allauth Configuration
 
 Once the necessary packages are installed, configure your Django project to use django-allauth with SAML:
