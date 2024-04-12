@@ -180,7 +180,11 @@ Then, add the following configuration in your `settings.py`:
    This configuration specifies your application's name, client ID, tenant ID, and certificate directly from environment variables, providing a secure and flexible way to manage your SAML integration. The `attribute_mapping` and `idp` configurations define how user attributes are mapped from SAML assertions and detail the identity provider (IdP) settings necessary for SAML assertions.
 
    #### Handling `metadata_url` and `x509cert` in django-allauth SAML Configuration
-   Avoid specifying `metadata_url` and `x509cert` together in django-allauth's SAML `idp` settings. If both are provided, allauth prioritizes the `idp` settings fetched from `metadata_url`, ignoring the manually set `x509cert`. Despite examples in the official documentation, using both can lead to confusion.   
+   Avoid specifying `metadata_url` and `x509cert` together in django-allauth's SAML `idp` settings. If both are provided, allauth prioritizes the `idp` settings fetched from `metadata_url`, ignoring the manually set `x509cert`. Despite examples in the official documentation, using both can lead to confusion.
+
+   ##### References:
+   1. https://docs.allauth.org/en/latest/socialaccount/providers/saml.html
+   2. https://github.com/pennersr/django-allauth/blob/main/allauth/socialaccount/providers/saml/utils.py#L135   
 
    #### Configuring `advanced` SAML app settings
 
@@ -203,3 +207,7 @@ Then, add the following configuration in your `settings.py`:
    ```
 
    This approach ensures that your application aligns with the security configurations set on the identity provider side (Microsoft Entra ID), maintaining the integrity and trustworthiness of the authentication process.
+
+   ##### References:
+   1. https://github.com/pennersr/django-allauth/blob/main/allauth/socialaccount/providers/saml/utils.py#L108
+   2. https://github.com/SAML-Toolkits/python3-saml/blob/master/src/onelogin/saml2/response.py#L312
