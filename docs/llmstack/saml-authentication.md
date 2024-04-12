@@ -80,6 +80,7 @@ Ensure that your proxy server (e.g., Nginx) is configured to pass the correct he
 
 
 ## Step 2: Register Your Application with Microsoft Entra
+![SSO - SAML - Microsoft Entra ID Configuration](/img/microsoft-entra-id-saml-sso.png)
 
 #### References:
 1. [SAML authentication with Microsoft Entra ID](https://learn.microsoft.com/en-us/entra/architecture/auth-saml)
